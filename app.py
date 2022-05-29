@@ -77,6 +77,23 @@ def contact():
     return render_template('contact.html')
 
 
+@app.route('blogForm')
+def blogForm():
+    if 'username' in session:
+        return render_template('blogForm.html')
+    return render_template('login.html')
+
+
+@app.route('/blog', methods=['POST', 'GET'])
+def blog():
+    if request.method == 'POST':
+        blogs = mongo.db.blogs
+        blogs.insert(
+            {'title': request.form['title'], 'content': request.form['content'], 'date': request.form['date']})
+        return render_template('user_dashboard.html')
+    return render_template('blog.html')
+
+
 @app.route('/user-dashboard')
 def userDashboard():
     return render_template('user_dashboard.html')
