@@ -77,7 +77,7 @@ def contact():
     return render_template('contact.html')
 
 
-@app.route('blogForm')
+@app.route('/blogForm')
 def blogForm():
     if 'username' in session:
         return render_template('blogForm.html')
