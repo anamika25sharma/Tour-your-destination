@@ -5,8 +5,8 @@ from pymongo import ALL
 
 app = Flask(__name__)
 
-app.config['MONGODB_NAME'] = 'tfortravel'
-app.config['MONGO_URI'] = "mongodb+srv://admin:7703042310@cluster0.235dw.mongodb.net/tfortravel?ssl=true&ssl_cert_reqs=CERT_NONE"
+app.config['MONGODB_NAME'] = 'touryourdestination'
+app.config['MONGO_URI'] = "mongodb+srv://admin:7703042310@cluster0.235dw.mongodb.net/touryourdestination?ssl=true&ssl_cert_reqs=CERT_NONE"
 
 mongo = PyMongo(app)
 
@@ -60,7 +60,7 @@ def dashboard():
         existing_place = places.find_one({'name': request.form['name']})
         if existing_place is None:
             places.insert({'name': request.form['name'], 'imgUrl': request.form['imgUrl'], 'address': request.form['address'],
-                          'temp': request.form['temp'], 'budget': request.form['budget'], 'about': request.form['about']})
+                          'temp': request.form['temp'], 'budget': request.form['budget'], 'about': request.form['about'], 'city': request.form['city']})
             return render_template('dashboard.html')
         flash('Place Already exist!', 'success')
         return render_template('dashboard.html')
@@ -80,23 +80,32 @@ def contact():
 @app.route('/blogForm')
 def blogForm():
     if 'username' in session:
-        return render_template('blogForm.html')
+        return render_template('blog_form.html')
     return render_template('login.html')
 
 
 @app.route('/blog', methods=['POST', 'GET'])
 def blog():
-    if request.method == 'POST':
+    if request.method == 'POST' and 'username' in session:
         blogs = mongo.db.blogs
         blogs.insert(
-            {'title': request.form['title'], 'content': request.form['content'], 'date': request.form['date']})
-        return render_template('user_dashboard.html')
-    return render_template('blog.html')
+            {'title': request.form['title'], 'content': request.form['content'], 'date': request.form['date'], 'author': session['username']})
+        return redirect(url_for('userDashboard'))
+    return redirect(url_for('userDashboard'))
 
 
 @app.route('/user-dashboard')
 def userDashboard():
-    return render_template('user_dashboard.html')
+    if 'username' in session:
+        blogs = mongo.db.blogs.find({'author': session['username']})
+        return render_template('user_dashboard.html', blogs=blogs)
+    return render_template('index.html')
+
+
+@app.route('/all-blogs')
+def allBlog():
+    blogs = mongo.db.blogs.find()
+    return render_template('blog.html', blogs=blogs)
 
 
 @app.route('/logout')

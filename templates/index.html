@@ -35,10 +35,11 @@
                     <div class="navbar-collapse collapse">
                         <ul class="nav navbar-nav">
                             <li class="active"><a href="{{ url_for('index')}}">Home</a></li>
+                            <li><a href="{{ url_for('allBlog')}}">Blogs</a></li>
                             <li><a href="{{ url_for('about') }}">About Us</a></li>
                             <li><a href="{{ url_for('contact') }}">Contact Us</a></li>
                             {% if 'username' in session %}
-                            <li><a href="{{ url_for('blog')}}">hi, {{session['username'] }}</a></li>
+                            <li><a href="{{ url_for('userDashboard')}}">hi, {{session['username'] }}</a></li>
                             <li><a href="{{ url_for('logout')}}">Logout</a></li>
                             {% else %}
                             <li><a href="{{ url_for('login') }}">Sign Up</a></li>
@@ -151,6 +152,7 @@
                         <select name="city" class="city">
                             <option value="">Select State </option>
                             <option value="Uttar Pradesh">Uttar Pradesh</option>
+                            <option value="Mumbai">Mumbai</option>
                         </select>
                     </div>
                     <div class="search1">
@@ -167,6 +169,8 @@
                     <div class="search1">
                         <select name="budget" class="city">
                             <option value="">Select Budget </option>
+                            <option value="250">250</option>
+                            <option value="1700">1700</option>
                             <option value="5000">5000</option>
                         </select>
                     </div>
